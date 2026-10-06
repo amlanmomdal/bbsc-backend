@@ -30,7 +30,7 @@ async function bootstrap() {
 
   // Enable CORS for frontend & admin integration
   app.enableCors({
-    origin: true,
+    origin: true, // Dynamically reflects origin and handles credentials cleanly
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
