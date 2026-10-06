@@ -16,6 +16,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Register CORS before static files so uploads and API responses include it.
+  app.enableCors({
+    origin: true, // Reflect the requesting frontend origin for credentialed requests.
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
   // Ensure uploads directory and subdirectories exist
   const baseUploadsDir = join(__dirname, '..', 'uploads');
   ['events', 'competitions', 'gallery', 'committee'].forEach((sub) => {
@@ -27,13 +34,6 @@ async function bootstrap() {
 
   // Serve static files from uploads folder at /uploads
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
-
-  // Enable CORS for frontend & admin integration
-  app.enableCors({
-    origin: true, // Dynamically reflects origin and handles credentials cleanly
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
-  });
 
   // Global API route prefix
   app.setGlobalPrefix('api');

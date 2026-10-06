@@ -11,6 +11,11 @@ const fs = require("fs");
 const swagger_1 = require("@nestjs/swagger");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    app.enableCors({
+        origin: true,
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        credentials: true,
+    });
     const baseUploadsDir = (0, path_1.join)(__dirname, '..', 'uploads');
     ['events', 'competitions', 'gallery', 'committee'].forEach((sub) => {
         const dir = (0, path_1.join)(baseUploadsDir, sub);
@@ -19,11 +24,6 @@ async function bootstrap() {
         }
     });
     app.use('/uploads', express.static((0, path_1.join)(__dirname, '..', 'uploads')));
-    app.enableCors({
-        origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-        credentials: true,
-    });
     app.setGlobalPrefix('api');
     const config = new swagger_1.DocumentBuilder()
         .setTitle('Burul Blue Star Club (BBSC) REST API')
